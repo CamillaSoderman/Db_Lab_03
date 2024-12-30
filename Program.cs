@@ -1,6 +1,11 @@
 ﻿using System.Runtime.ConstrainedExecution;
 using System;
 
+// Chas academy
+// Fullstack .net
+// Camilla Söderman
+// 2024-12-20
+
 namespace Db_Lab_03
 {
 

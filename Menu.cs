@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Db_Lab_03.Data;
 
+
+// Bygg menuchoice ex student choice i metoden istället för i menyn.
+//  string? sortChoice = Console.ReadLine();
+
+// SET INDENTITY_INSERT TO ON 
 namespace Db_Lab_03
 {
     internal class Menu
@@ -13,73 +18,91 @@ namespace Db_Lab_03
 
         public static void Run()
         {
-        bool isRunning = true; 
+        bool isRunning = true;
 
-           
 
-        
             while (isRunning)
             {
-                int menuChoice = ShowMainMenu();
-                int studentChoice = ShowStudentMenu();
-                int staffChoice = ShowStaffMenu();
-                int classChoice = ShowClassMenu();
-                int gradeChoice = ShowGradeMenu();
+                //int menuChoice = ShowMainMenu();
+                //int studentChoice = StudentMenu();
+                //int staffChoice = ShowStaffMenu();
+                //int classChoice = ShowClassMenu();
+                //int gradeChoice = ShowGradeMenu();
+
+                //ShowMainMenu(); // Show main menu
+                Console.WriteLine("Welcome to Chas Academy");
+                Console.WriteLine("[1] Show and add students");
+                Console.WriteLine("[2] Show and add staff");
+                Console.WriteLine("[3] Show classes and grades");
+                Console.WriteLine("[4] Exit");
+                string? menuChoice = Console.ReadLine();
 
                 switch (menuChoice)
                 {
-                    case 1:
-                        Console.WriteLine("Show students");
-                        switch (studentChoice)
-                        {
-                            case 1: // Add student
+                    case "1":
+                        
+                        StudentMenu();
+                        // add student and show stundents by fname or lname
 
-                            case 2: // Show all students
-
-
-                        }
+                        //switch (studentChoice)
+                        //{
+                        //    case 1: // Add student
+                        //        Console.WriteLine("");
+                        //        AddStudent();
+                        //        Console.WriteLine("");
+                        //        break;
+                        //    case 2: // Show all students
+                        //        Console.WriteLine("");
+                        //        DisplayStudents();
+                        //        Console.WriteLine("");
+                        //        break;
+                        //}
+                        Console.WriteLine("");
                         break;
-                    case 2:
-                        Console.WriteLine("Show staff");
-                        switch (staffChoice)
-                        {
-                            case 1: // Add staff
-
-                            case 2: // Show all staff
-
-                            case 3: // Show all teachers
-
-                            case 4: // Show all adminitrators
 
 
+                    case "2":
+                        ShowStaffMenu();
+                        // Show all staff after choice/title
+                        // add staff using entity framework
 
+                        //switch (staffChoice)
+                        //{
+                        //    case 1: // Add staff
+                        //        break;
+                        //    case 2: // Show all staff
+                        //        break;
+                        //    case 3: // Show all teachers
+                        //        break;
+                        //    case 4: // Show all adminitrators
+                        //        break;
+                        //    case 5: // Exit
+                        //        break;
 
-                        }
+                        //}
+                        Console.WriteLine("");
+                        
                         break;
-                    case 3:
-                        Console.WriteLine("Show classes and grades");
-                        switch (classChoice)
-                        {
-                            case 1: // Show classes
-                                switch (classChoice)
-                                {
-                                    case 1: // Show all classes
-                                    case 2: // Show math
-                                    case 3: // Show english
-                                    case 4: // Show history
-                                }
-                            case 2: // Show grades
-                                switch (gradeChoice)
-                                {
-                                    case 1: // Show grades for all students, name, course, grade
-                                    case 2: // Show grades high/low/ average all classes
-                                    case 3: // Show grades for a specific class
-                                }
+                    case "3":
+
+                        ShowClassMenu();
+                        // Show all classes, select class and show grades
+
+                        //switch (classChoice)
+                        //{
+                        //    case 1: // Show classes
+                        //        break;
+                        //    case 2: // Show grades
+                        //        break;
+                        //    case 3: // Exit
+                        //        break;
 
 
-                        }
+                        //}
+                        Console.WriteLine("");
                         break;
-                    case 4:
+                    case "4":
+                        Console.WriteLine("Goodbye!");
                         isRunning = false;
                         break;
                     default:
@@ -88,28 +111,122 @@ namespace Db_Lab_03
 
             }
 
-}
-
-        private static int ShowMainMenu()
-        {
-
-            Console.WriteLine("[1] Show students");
-            Console.WriteLine("[2] Show staff");
-            Console.WriteLine("[3] Show classes");
-            Console.WriteLine("[4] Exit");
-            Console.SetCursorPosition(1, Console.CursorTop);
-
-            return GetValidInput(1, 4);
-
         }
 
-        private static int ShowStudentMenu()
+        private static void AddStudent()
         {
-            Console.WriteLine("[1] Add student");
-            Console.WriteLine("[2] Show all students");
-            Console.SetCursorPosition(1, Console.CursorTop);
-            return GetValidInput(1, 2);
+          
+            // Add student to database
+            using (var context = new SchoolContext())
+            {
+                Console.WriteLine("Enter first name: ");
+                var sfirstName = Console.ReadLine();
+                Console.WriteLine("Enter last name: ");
+                var slastName = Console.ReadLine();
+                Console.WriteLine("Enter city: ");
+                var adress = Console.ReadLine();
+               
+                var student = new Models.Student
+                {
+                    SfirstName = sfirstName,
+                    SlastName = slastName,
+                    Sadress = adress,
+                   
+                };
+                context.Students.Add(student);
+                context.SaveChanges();
+                Console.WriteLine($"{sfirstName} {slastName} is now added as a student ");
+
+            }
         }
+
+        private static void StudentMenu()
+        {
+          
+            // Display all student
+
+            using (var context = new SchoolContext())
+            {
+                Console.WriteLine("[1] Sort by first name ");
+                Console.WriteLine("[2] Sort by last name");
+                Console.WriteLine("[3] Add student");
+                Console.WriteLine("[4] Exit");
+                string? studentChoice = Console.ReadLine();
+
+                Console.WriteLine("");
+
+                switch (studentChoice)
+                {
+                    case "1": // Sort by first name
+                        var students = context.Students.OrderBy(s => s.SfirstName).ToList();
+                        foreach (var student in students)
+                        {
+                            Console.WriteLine($"{student.SfirstName} {student.SlastName}");
+                        }
+                        break;
+                    case "2": // Sort by last name
+                        var students2 = context.Students.OrderBy(s => s.SlastName).ToList();
+                        foreach (var student in students2)
+                        {
+                            Console.WriteLine($"{student.SfirstName} {student.SlastName}");
+                        }
+                        break;
+                    case "3": // Add student
+                        AddStudent();
+                        break;
+                    case "4": // Exit
+                        break;
+                }
+
+                //Console.SetCursorPosition(1, Console.CursorTop);
+
+                //int input = GetValidInput(1, 3);
+
+                //switch (input)
+                //{
+                //    case 1: // Sort by first name
+                //        var students = context.Students.OrderBy(s => s.SfirstName).ToList();
+                //        foreach (var student in students)
+                //        {
+                //            Console.WriteLine($"{student.SfirstName} {student.SlastName}");
+                //        }
+                //        break;
+
+                //    case 2: // Sort by last name
+                //        var students2 = context.Students.OrderBy(s => s.SlastName).ToList();
+                //        foreach (var student in students2)
+                //        {
+                //            Console.WriteLine($"{student.SfirstName} {student.SlastName}");
+                //        }
+                //        break;
+
+                //    case 3: // Exit
+                //        break;
+                //}
+            }
+        }
+
+        //private static int ShowMainMenu()
+        //{
+
+        //    Console.WriteLine("[1] Show students");
+        //    Console.WriteLine("[2] Show staff");
+        //    Console.WriteLine("[3] Show classes");
+        //    Console.WriteLine("[4] Exit");
+        //    Console.SetCursorPosition(1, Console.CursorTop);
+
+        //    return GetValidInput(1, 4);
+
+        //}
+
+        //private static int ShowStudentMenu()
+        //{
+        //    Console.WriteLine("[1] Add student");
+        //    Console.WriteLine("[2] Show all students");
+        //    Console.WriteLine("[3] Exit");
+        //    Console.SetCursorPosition(1, Console.CursorTop);
+        //    return GetValidInput(1, 3);
+        //}
 
         private static int ShowStaffMenu()
         {
@@ -117,16 +234,18 @@ namespace Db_Lab_03
             Console.WriteLine("[2] Show all staff");
             Console.WriteLine("[3] Show all teachers");
             Console.WriteLine("[4] Show all administrators");
+            Console.WriteLine("[5] Exit");
             Console.SetCursorPosition(1, Console.CursorTop);
-            return GetValidInput(1, 4);
+            return GetValidInput(1, 5);
         }
 
         private static int ShowClassMenu()
         {
             Console.WriteLine("[1] Show classes");
             Console.WriteLine("[2] Show grades");
+            Console.WriteLine("[3] Exit");
             Console.SetCursorPosition(1, Console.CursorTop);
-            return GetValidInput(1, 2);
+            return GetValidInput(1, 3);
         }
 
         private static int ShowGradeMenu()
@@ -134,12 +253,14 @@ namespace Db_Lab_03
             Console.WriteLine("[1] Show grades for all students");
             Console.WriteLine("[2] Show grades high/low/ average all classes");
             Console.WriteLine("[3] Show grades for a specific class");
+            Console.WriteLine("[4] Exit");
             Console.SetCursorPosition(1, Console.CursorTop);
-            return GetValidInput(1, 3);
+            return GetValidInput(1, 4);
         }
 
         private static int GetValidInput(int v1, int v2)
         {
+            // Get valid input from user and returns the input if valid input is given
             int input;
             do
             {
