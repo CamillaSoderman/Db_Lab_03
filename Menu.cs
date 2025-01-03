@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,13 +24,7 @@ namespace Db_Lab_03
 
             while (isRunning)
             {
-                //int menuChoice = ShowMainMenu();
-                //int studentChoice = StudentMenu();
-                //int staffChoice = ShowStaffMenu();
-                //int classChoice = ShowClassMenu();
-                //int gradeChoice = ShowGradeMenu();
-
-                //ShowMainMenu(); // Show main menu
+                // Main Menu
                 Console.WriteLine("Welcome to Chas Academy");
                 Console.WriteLine("[1] Show and add students");
                 Console.WriteLine("[2] Show and add staff");
@@ -42,69 +37,29 @@ namespace Db_Lab_03
                     case "1":
                         
                         StudentMenu();
-                        // add student and show stundents by fname or lname
-
-                        //switch (studentChoice)
-                        //{
-                        //    case 1: // Add student
-                        //        Console.WriteLine("");
-                        //        AddStudent();
-                        //        Console.WriteLine("");
-                        //        break;
-                        //    case 2: // Show all students
-                        //        Console.WriteLine("");
-                        //        DisplayStudents();
-                        //        Console.WriteLine("");
-                        //        break;
-                        //}
+              
                         Console.WriteLine("");
                         break;
-
 
                     case "2":
                         ShowStaffMenu();
-                        // Show all staff after choice/title
-                        // add staff using entity framework
-
-                        //switch (staffChoice)
-                        //{
-                        //    case 1: // Add staff
-                        //        break;
-                        //    case 2: // Show all staff
-                        //        break;
-                        //    case 3: // Show all teachers
-                        //        break;
-                        //    case 4: // Show all adminitrators
-                        //        break;
-                        //    case 5: // Exit
-                        //        break;
-
-                        //}
+                   
                         Console.WriteLine("");
                         
                         break;
+
                     case "3":
 
                         ShowClassMenu();
-                        // Show all classes, select class and show grades
-
-                        //switch (classChoice)
-                        //{
-                        //    case 1: // Show classes
-                        //        break;
-                        //    case 2: // Show grades
-                        //        break;
-                        //    case 3: // Exit
-                        //        break;
-
-
-                        //}
+               
                         Console.WriteLine("");
                         break;
+
                     case "4":
                         Console.WriteLine("Goodbye!");
                         isRunning = false;
                         break;
+
                     default:
                         break;
                 }
@@ -115,26 +70,36 @@ namespace Db_Lab_03
 
         private static void AddStudent()
         {
-          
+
             // Add student to database
             using (var context = new SchoolContext())
+            using (var transaction = context.Database.BeginTransaction())
             {
                 Console.WriteLine("Enter first name: ");
                 var sfirstName = Console.ReadLine();
                 Console.WriteLine("Enter last name: ");
                 var slastName = Console.ReadLine();
-                Console.WriteLine("Enter city: ");
-                var adress = Console.ReadLine();
+                Console.WriteLine("Enter personalnumber: ");
+                var sssn = Console.ReadLine();
                
                 var student = new Models.Student
                 {
                     SfirstName = sfirstName,
                     SlastName = slastName,
-                    Sadress = adress,
-                   
+                    StudentNsn = sssn, // Social security number
+
                 };
+
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Student] ON"); // SET IDENTITY_INSERT TO ON
+               
                 context.Students.Add(student);
                 context.SaveChanges();
+
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Student] OFF"); // SET IDENTITY_INSERT TO OFF
+
+                transaction.Commit();
+
+
                 Console.WriteLine($"{sfirstName} {slastName} is now added as a student ");
 
             }
@@ -273,7 +238,8 @@ namespace Db_Lab_03
             } while (true);
             return input;
         }
-    }
+        
+}
 }
 
 
