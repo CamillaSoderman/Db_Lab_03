@@ -9,9 +9,5 @@ public partial class Course
 
     public string CourseName { get; set; } = null!;
 
-    public string? EmployeeName { get; set; }
-
-    public virtual Employee? EmployeeNameNavigation { get; set; }
-
-    public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
+    public virtual ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
 }

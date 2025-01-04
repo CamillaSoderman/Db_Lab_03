@@ -7,11 +7,13 @@ public partial class Employee
 {
     public int EmployeeId { get; set; }
 
-    public string EmployeeName { get; set; } = null!;
+    public string EmpFirstName { get; set; } = null!;
+    public string EmpLastName { get; set; } = null!;
 
-    public string? Position { get; set; }
+    public int RoleId { get; set; }
+    public DateTime EmploymentDate { get; set; }
 
-    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+    public virtual ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
 
-    public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
+    public virtual Role Role { get; set; } = null!;
 }

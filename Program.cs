@@ -1,10 +1,12 @@
 ﻿using System.Runtime.ConstrainedExecution;
 using System;
+using Db_Lab_03.Data;
+using static Db_Lab_03.Data.SchoolContext;
 
 // Chas academy
 // Fullstack .net
 // Camilla Söderman
-// 2024-12-20
+// 2024-12-10
 
 namespace Db_Lab_03
 {
@@ -27,6 +29,12 @@ namespace Db_Lab_03
     {
         static void Main(string[] args)
         {
+            // Used this method to check that all migrations are applied
+            //using (var context = new SchoolContext())
+            //{
+            //    MigrationChecker.CheckPendingMigrations(context);
+            //}
+
             Menu.Run();
         }
     }

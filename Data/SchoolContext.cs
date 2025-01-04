@@ -20,9 +20,13 @@ public partial class SchoolContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
-    public virtual DbSet<Grade> Grades { get; set; }
-
     public virtual DbSet<Student> Students { get; set; }
+
+    public virtual DbSet<Enrolment> Enrolments { get; set; }
+
+    public virtual DbSet<Role> Roles { get; set; }
+
+   
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -32,54 +36,26 @@ public partial class SchoolContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.CourseName).HasName("PK__Course__9526E27678735AB8");
+            entity.HasKey(e => e.CourseId).HasName("PK__Course__9526E27678735AB8");
 
             entity.ToTable("Course");
-
+            entity.Property(e => e.CourseId).ValueGeneratedNever();
             entity.Property(e => e.CourseName).HasMaxLength(50);
-            entity.Property(e => e.EmployeeName).HasMaxLength(50);
-
-            entity.HasOne(d => d.EmployeeNameNavigation).WithMany(p => p.Courses)
-                .HasForeignKey(d => d.EmployeeName)
-                .HasConstraintName("FK__Course__Employee__3D5E1FD2");
+            
         });
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.EmployeeName).HasName("PK__Employee__9158E42B9791316A");
+            entity.HasKey(e => e.EmployeeId).HasName("PK__Employee__9158E42B9791316A");
 
             entity.ToTable("Employee");
 
-            entity.Property(e => e.EmployeeName).HasMaxLength(50);
-            entity.Property(e => e.Position).HasMaxLength(50);
+            entity.Property(e => e.EmpFirstName).HasMaxLength(50);
+            entity.Property(e => e.EmpLastName).HasMaxLength(50);
+            entity.Property(e => e.RoleId).HasMaxLength(50);
+            entity.Property(e => e.EmploymentDate).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<Grade>(entity =>
-        {
-            entity.HasKey(e => e.GradeId).HasName("PK__Grades__54F87A5775C9BEFF");
-
-            entity.Property(e => e.GradeId).ValueGeneratedNever();
-            entity.Property(e => e.CourseName).HasMaxLength(50);
-            entity.Property(e => e.EmployeeName).HasMaxLength(50);
-            entity.Property(e => e.Grade1)
-                .HasMaxLength(2)
-                .HasColumnName("Grade");
-            entity.Property(e => e.ReportDate).HasColumnName("Report_Date");
-            entity.Property(e => e.SfirstName)
-                .HasMaxLength(50)
-                .HasColumnName("SFirstName");
-            entity.Property(e => e.SlastName)
-                .HasMaxLength(50)
-                .HasColumnName("SLastName");
-
-            entity.HasOne(d => d.CourseNameNavigation).WithMany(p => p.Grades)
-                .HasForeignKey(d => d.CourseName)
-                .HasConstraintName("FK__Grades__CourseNa__403A8C7D");
-
-            entity.HasOne(d => d.EmployeeNameNavigation).WithMany(p => p.Grades)
-                .HasForeignKey(d => d.EmployeeName)
-                .HasConstraintName("FK__Grades__Employee__412EB0B6");
-        });
 
         modelBuilder.Entity<Student>(entity =>
         {
@@ -91,19 +67,70 @@ public partial class SchoolContext : DbContext
             entity.Property(e => e.Sadress)
                 .HasMaxLength(50)
                 .HasColumnName("SAdress");
+
             entity.Property(e => e.SfirstName)
                 .HasMaxLength(50)
                 .HasColumnName("SFirstName");
+
             entity.Property(e => e.SlastName)
                 .HasMaxLength(50)
                 .HasColumnName("SLastName");
+
             entity.Property(e => e.StudentNsn)
                 .HasMaxLength(50)
                 .HasColumnName("StudentNSN");
         });
 
+        modelBuilder.Entity<Enrolment>(entity =>
+        {
+            entity.HasKey(e => e.EnrolmentId).HasName("PK__Enrolmen__C3B4DFFA3A3D3A3D");
+            entity.ToTable("Enrolment");
+            entity.Property(e => e.EnrolmentId).ValueGeneratedNever();
+            entity.Property(e => e.CourseId).HasMaxLength(50);
+            entity.Property(e => e.StudentId).HasMaxLength(50);
+            entity.Property(e => e.EmployeeId).HasMaxLength(50);
+            entity.Property(e => e.GradeDate).HasColumnType("datetime");
+            entity.Property(e => e.Grade).HasMaxLength(2);
+
+
+            
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE1A3A3D3A3D");
+            entity.ToTable("Roles");
+            entity.Property(e => e.RoleId).HasMaxLength(50);
+            entity.Property(e => e.RoleName).HasMaxLength(50);
+        });
+
+
+
         OnModelCreatingPartial(modelBuilder);
     }
 
+   
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    // Used this method to double check that all migrations were applied
+    //public class MigrationChecker
+    //{
+    //    public static void CheckPendingMigrations(SchoolContext context)
+    //    {
+    //        var pendingMigrations = context.Database.GetPendingMigrations();
+    //        if (pendingMigrations.Any())
+    //        {
+    //            Console.WriteLine("There are pending migrations:");
+    //            foreach (var migration in pendingMigrations)
+    //            {
+    //                Console.WriteLine(migration);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Console.WriteLine("All migrations are applied.");
+    //        }
+    //    }
+    //}
 }
