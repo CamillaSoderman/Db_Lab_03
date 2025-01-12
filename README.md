@@ -53,9 +53,3 @@ Denna labb bygger vidare på labb 2 och du ska alltså jobba vidare med samma da
 - Bygg ytterligare en funktion för användaren där det går att få fram snittbetyget baserat dels på kön och dels på åldersgrupp/årskull sett till snittet för alla kurser de läst.
 </aside>
 
-# Din inlämning
-
-- Skicka in uppgiften i Canvas
-- Skicka in en textfil som innehåller länk till Github + en SQL-fil med din exporterade databas
-
-[Namnlös](https://www.notion.so/130a11b2b40c81ac8546c5ca127b91bc?pvs=21)
