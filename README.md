@@ -45,11 +45,61 @@ Denna labb bygger vidare på labb 2 och du ska alltså jobba vidare med samma da
         Användaren får möjlighet att mata in uppgifter om en ny anställd och den data sparas då ner i databasen.
         
 
-<aside>
-👉 **Extrautmaningar**
+## Projekt Individual
 
-- Kontrollera att personnumren är giltiga genom SQL.
-- Bygg en view för att hämta betyg som satts den senaste månaden.
-- Bygg ytterligare en funktion för användaren där det går att få fram snittbetyget baserat dels på kön och dels på åldersgrupp/årskull sett till snittet för alla kurser de läst.
+I detta projekt ska du bygga klart en helt fungerande applikation för den fiktiva skola du jobbat med i de senaste labbarna. Du ska alltså skapa en Consol-applikation som skolan kan använda och som har den funktionalitet som efterfrågas nedan.
+
+### Funktioner i programmet:
+
+Här följer de funktioner du ska bygga i ditt program. 
+
+<aside>
+➡️ Det måste finnas en meny där man kan välja att visa olika data som efterfrågas av skolan. (Console)
+
+</aside>
+
+<aside>
+➡️ Skolan vill kunna ta fram en översikt över all personal där det framgår namn och vilka befattningar de har samt hur många år de har arbetat på skolan. Administratören vill också ha möjlighet att spara ner ny personal. (SQL i SSMS)
+
+</aside>
+
+<aside>
+➡️ Vi vill spara ner elever och se vilken klass de går i. Vi vill kunna spara ner betyg för en elev i varje kurs de läst och vi vill kunna se vilken lärare som satt betyget. Betyg ska också ha ett datum då de satts. (SQL i SSMS)
+
+</aside>
+
+<aside>
+➡️ Hur många lärare jobbar på de olika avdelningarna? (EF i VS)
+
+</aside>
+
+<aside>
+➡️ Visa information om alla elever (EF i VS)
+
+</aside>
+
+<aside>
+➡️ Visa en lista på alla (aktiva) kurser (EF i VS)
+
+</aside>
+
+<aside>
+➡️ Hur mycket betalar respektive avdelning ut i lön varje månad? (SQL i SSMS)
+
+</aside>
+
+<aside>
+➡️ Hur mycket är medellönen för de olika avdelningarna? (SQL i SSMS)
+
+</aside>
+
+<aside>
+➡️ Skapa en Stored Procedure som tar emot ett Id och returnerar viktig information om den elev som är registrerad med aktuellt id. (SQL i SSMS)
+
+</aside>
+
+<aside>
+➡️ Sätt betyg på en elev genom att använda Transactions ifall något går fel. (SQL i SSMS)
+
 </aside>
 
