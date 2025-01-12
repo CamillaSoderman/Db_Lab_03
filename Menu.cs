@@ -277,8 +277,16 @@ namespace Db_Lab_03
             var employees = context.Employees.OrderBy(e => e.EmpFirstName).ToList();
             foreach (var employee in employees)
             {
-                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Role: {GetRoleName(employee.RoleId)}");
+                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Role: {GetRoleName(employee.RoleId)} Time in position: {GetTimeAtPosition(employee.EmploymentDate)}");
             }
+        }
+
+        // Method to get time at position for staff
+        private static object GetTimeAtPosition(DateTime employmentDate)
+        {
+            DateTime today = DateTime.Now;
+            TimeSpan timeAtPosition = today - employmentDate;
+            return timeAtPosition.Days;
         }
 
         // Method to show staff by role with user inut as navigation
