@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Db_Lab_03.Data;
 using Db_Lab_03.Models;
+using System.Diagnostics;
 
 namespace Db_Lab_03
 {
@@ -75,8 +76,12 @@ namespace Db_Lab_03
                 string sfirstName = Console.ReadLine();
                 Console.WriteLine("Enter last name: ");
                 string slastName = Console.ReadLine();
-                Console.WriteLine("Enter personalnumber: ");
+                Console.WriteLine("Enter social-security-number: ");
                 var sssn = Console.ReadLine();
+                Console.WriteLine("Enter City: ");
+                string saddress = Console.ReadLine();
+                Console.WriteLine("Enter class ID: ");
+                var classId = Console.ReadLine();
 
                 long ssn = long.Parse(sssn); // User input in string converted to long for the security number
 
@@ -85,7 +90,8 @@ namespace Db_Lab_03
                     SfirstName = sfirstName,
                     SlastName = slastName,
                     StudentNsn = ssn, // Social security number
-
+                    Sadress = saddress,
+                    ClassId = int.Parse(classId)
                 };
 
                 // Using raw SQL to set IDENTITY_INSERT to ON and OFF
@@ -123,6 +129,8 @@ namespace Db_Lab_03
                 var empLastName = Console.ReadLine();
                 Console.WriteLine("Enter employment start date (format: yyyy-MM-dd) : ");
                 var empDate = Console.ReadLine();
+              
+
 
                 if (DateTime.TryParse(empDate, out DateTime dateTimeValue)) // Double check if the input is a valid date
                 {
@@ -139,18 +147,21 @@ namespace Db_Lab_03
                 Console.WriteLine("Select the number of your role: ");
                 Console.WriteLine("[1] Teacher");
                 Console.WriteLine("[2] Administrator");
-                Console.WriteLine("[3] Other");
+                Console.WriteLine("[5] Superhero");
                 string? roleIdstring = Console.ReadLine();
+                Console.WriteLine("Enter salary: ");
+                var salary = Console.ReadLine();
 
-                int roleId = int.Parse(roleIdstring); // User input in string converted to int
+                int roleId1 = int.Parse(roleIdstring); // User input in string converted to int
                 var empName = empFirstName + " " + empLastName;
-
+                int salary1 = int.Parse(salary); // User input in string converted to int
                 var staff = new Models.Employee
                 {
                     EmpFirstName = empFirstName,
                     EmpLastName = empLastName,
                     EmploymentDate = DateTime.Parse(empDate),
-                    RoleId = roleId 
+                    RoleId = roleId1,
+                    Salary = salary1
 
                 };
 
@@ -219,7 +230,7 @@ namespace Db_Lab_03
 
             foreach (var student in students)
             {
-                Console.WriteLine($"{student.SfirstName} {student.SlastName}");
+                Console.WriteLine($"Name: {student.SfirstName} {student.SlastName}, Class: {student.ClassId}, City: {student.Sadress}, ");
             }
         }
 
@@ -233,7 +244,6 @@ namespace Db_Lab_03
                 Console.WriteLine("[2] Show all staff");
                 Console.WriteLine("[3] Show all teachers");
                 Console.WriteLine("[4] Show all administrators");
-                Console.WriteLine("[5] Show staff by role");
                 Console.WriteLine("[6] Exit");
                 string? staffChoice = Console.ReadLine();
 
@@ -271,14 +281,71 @@ namespace Db_Lab_03
 
             }
         }
-        // Method to show all staff ordered by first name
+        // Method to show all staff ordered by role to show teachers, administrators and other staff and count of each role
         private static void ShowAllStaff(SchoolContext context)
         {
-            var employees = context.Employees.OrderBy(e => e.EmpFirstName).ToList();
+            int countTeachers = context.Employees.Count(e => e.RoleId == 1);
+            int countAdministrators = context.Employees.Count(e => e.RoleId == 2);
+            int countOther = context.Employees.Count(e => e.RoleId == 3);
+            int totalStaff = countTeachers + countAdministrators + countOther;
+
+            var employees = context.Employees.Where(e => e.RoleId == 1).ToList();
+            Console.WriteLine(" Teachers:");
             foreach (var employee in employees)
             {
-                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Role: {GetRoleName(employee.RoleId)}");
+                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Time in position: {GetTimeAtPosition(employee.EmploymentDate)}");
             }
+            Console.WriteLine("");
+
+            var employees2 = context.Employees.Where(e => e.RoleId == 2).ToList();
+            Console.WriteLine(" Administrators:");
+            foreach (var employee in employees2)
+            {
+                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Time in position: {GetTimeAtPosition(employee.EmploymentDate)}");
+            }
+            Console.WriteLine("");
+
+            var employees3 = context.Employees.Where(e => e.RoleId > 2).ToList();
+            Console.WriteLine(" Other:");
+            foreach (var employee in employees3)
+            {
+                Console.WriteLine($"{employee.EmpFirstName} {employee.EmpLastName}, Role: {GetRoleName(employee.RoleId)} Time in position: {GetTimeAtPosition(employee.EmploymentDate)}");
+            }
+            Console.WriteLine("");
+
+            Console.WriteLine($"Total staff: {totalStaff}");
+        }
+
+        // Method to get time at position for staff
+
+             private static object GetTimeAtPosition(DateTime employmentDate)
+        {
+            string smonths = "months";
+            string syear = "year";
+            string syears = "years";
+            DateTime today = DateTime.Now;
+            TimeSpan timeAtPosition = today - employmentDate;
+            int days = timeAtPosition.Days;
+            if (days < 31)
+            {
+                return days + " days";
+            }
+            else if (days > 31 && days < 365)
+            {
+                int months = days / 30;
+                return months + " " + smonths;
+            }
+            else if (days > 364 && days < 730)
+            {
+                int year = 1;
+                return year + " " + syear;
+            }
+            else // if (days > 730)
+            {
+                int years = days / 365;
+                return years + " " + syears;
+            }
+            
         }
 
         // Method to show staff by role with user inut as navigation
@@ -341,9 +408,19 @@ namespace Db_Lab_03
         // Show classes with classID and className
         private static void ShowClasses(SchoolContext context)
         {
-
             var courses = context.Courses.ToList();
-            foreach (var course in courses)
+
+            // Show All active classes in a list
+            Console.WriteLine("Active classes:");
+            foreach (var course in courses.Where(c => c.Active))
+            {
+                Console.WriteLine($"{course.CourseId} {course.CourseName}");
+            }
+            Console.WriteLine("");
+
+            // Show all inactive classes in a list
+            Console.WriteLine("Inactive classes:");
+            foreach (var course in courses.Where(c => !c.Active))
             {
                 Console.WriteLine($"{course.CourseId} {course.CourseName}");
             }
@@ -388,13 +465,14 @@ namespace Db_Lab_03
         {
             Console.WriteLine("Grades:");
             // Get the current date
-            DateTime currentDate = DateTime.Now;
+            var currentDate = DateTime.Now;
 
             // Get the date 30 days ago
-            DateTime thirtyDaysAgo = currentDate.AddDays(-30);
+            var thirtyDaysAgo = currentDate.AddDays(-30);
+
 
             // Query grades from the last 30 days
-            var grades = context.Enrolments
+            var grades = context.Grades
                                 .Where(e => e.GradeDate >= thirtyDaysAgo) // Only collect the grades that are 30 days old or newer
                                 .ToList();
 
@@ -403,21 +481,24 @@ namespace Db_Lab_03
             // Grades from the last 30 days
             foreach (var grade in grades)
             {
-                Console.WriteLine($"Student ID: {grade.StudentId}, Course ID: {grade.CourseId}, Grade: {grade.Grade}, Date: {grade.GradeDate}");
+                var gradeDate = grade.GradeDate.ToString("yyyy-MM-dd");
+                Console.WriteLine($"Student ID: {grade.StudentId}, Course ID: {grade.CourseId}, Grade: {grade.Grade}, Date: {gradeDate}");
             }
             Console.WriteLine("");
 
             // All grades
             Console.WriteLine("All grades:");
-            var grades1 = context.Enrolments.ToList();
+            var grades1 = context.Grades.ToList();
+           
             foreach (var grade in grades1)
             {
+                var gradeDate1 = grade.GradeDate.ToString("yyyy-MM-dd");
                 Console.WriteLine($"Student ID: {grade.StudentId}, Course ID: {grade.CourseId}, Grade: {grade.Grade}, Date: {grade.GradeDate}");
             }
         }
         private static void ShowHighLowAverage(SchoolContext context)
         {
-            var grades = context.Enrolments.ToList();
+            var grades = context.Grades.ToList();
             if (grades.Count == 0)          // If no grades are available
             {
                 Console.WriteLine("No grades available.");
@@ -426,7 +507,7 @@ namespace Db_Lab_03
 
             decimal? highestGrade = grades.Max(g => g.Grade);
             decimal? lowestGrade = grades.Min(g => g.Grade);
-            decimal? averageGrade = grades.Average(g => g.Grade);
+            decimal? averageGrade = (decimal?)grades.Average(g => g.Grade);
 
             Console.WriteLine($"Highest Grade: {highestGrade}");
             Console.WriteLine($"Lowest Grade: {lowestGrade}");
@@ -446,7 +527,7 @@ namespace Db_Lab_03
 
             if (int.TryParse(Console.ReadLine(), out int classId))
             {
-                var grades = context.Enrolments.Where(e => e.CourseId == classId).ToList();
+                var grades = context.Grades.Where(e => e.CourseId == classId).ToList();
                 if (grades.Count == 0)
                 {
                     Console.WriteLine("No grades available for this class.");

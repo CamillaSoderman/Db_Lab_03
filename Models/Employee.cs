@@ -12,8 +12,12 @@ public partial class Employee
 
     public int RoleId { get; set; }
     public DateTime EmploymentDate { get; set; }
+    public int Salary { get; set; }
+
 
     public virtual ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
 
     public virtual Role Role { get; set; } = null!;
+
+
 }

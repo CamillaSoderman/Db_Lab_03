@@ -13,10 +13,6 @@ public partial class Enrolment
 
     public int EmployeeId { get; set; }
 
-    public DateTime? GradeDate { get; set; }
-
-    public decimal? Grade { get; set; }
-
   
     public virtual Course Course { get; set; } = null!;
 

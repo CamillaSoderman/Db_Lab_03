@@ -26,7 +26,9 @@ public partial class SchoolContext : DbContext
 
     public virtual DbSet<Role> Roles { get; set; }
 
-   
+    public virtual DbSet<Grades> Grades { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -41,7 +43,8 @@ public partial class SchoolContext : DbContext
             entity.ToTable("Course");
             entity.Property(e => e.CourseId).ValueGeneratedNever();
             entity.Property(e => e.CourseName).HasMaxLength(50);
-            
+            entity.Property(e => e.Active).HasMaxLength(50);
+
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -54,6 +57,7 @@ public partial class SchoolContext : DbContext
             entity.Property(e => e.EmpLastName).HasMaxLength(50);
             entity.Property(e => e.RoleId).HasMaxLength(50);
             entity.Property(e => e.EmploymentDate).HasColumnType("datetime");
+            entity.Property(e => e.Salary).HasMaxLength(50);
         });
 
 
@@ -79,6 +83,8 @@ public partial class SchoolContext : DbContext
             entity.Property(e => e.StudentNsn)
                 .HasMaxLength(50)
                 .HasColumnName("StudentNSN");
+
+            entity.Property(e => e.ClassId).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Enrolment>(entity =>
@@ -89,11 +95,8 @@ public partial class SchoolContext : DbContext
             entity.Property(e => e.CourseId).HasMaxLength(50);
             entity.Property(e => e.StudentId).HasMaxLength(50);
             entity.Property(e => e.EmployeeId).HasMaxLength(50);
-            entity.Property(e => e.GradeDate).HasColumnType("datetime");
-            entity.Property(e => e.Grade).HasMaxLength(2);
 
 
-            
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -105,11 +108,23 @@ public partial class SchoolContext : DbContext
         });
 
 
+        modelBuilder.Entity<Grades>(entity =>
+        {
+            entity.HasKey(e => e.GradeId).HasName("PK__Grades__C3B4DFFA3A3D3A3D");
+            entity.ToTable("Grades");
+            entity.Property(e => e.GradeId).ValueGeneratedNever();
+            entity.Property(e => e.EmployeeId).HasMaxLength(50);
+            entity.Property(e => e.StudentId).HasMaxLength(50);
+            entity.Property(e => e.CourseId).HasMaxLength(50);
+            entity.Property(e => e.Grade).HasMaxLength(50);
+            
+            entity.Property(e => e.GradeDate).HasColumnType("datetime");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
 
-   
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
@@ -134,3 +149,5 @@ public partial class SchoolContext : DbContext
     //    }
     //}
 }
+
+
