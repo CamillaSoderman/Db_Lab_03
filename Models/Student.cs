@@ -15,5 +15,7 @@ public partial class Student
 
     public string? Sadress { get; set; }
 
+    public int ClassId { get; set; }
+
     public virtual ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
 }
